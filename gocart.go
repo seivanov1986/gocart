@@ -44,7 +44,8 @@ func New(opts ...OptionFunc) *goCart {
 	}
 
 	return &goCart{
-		database: options.database,
+		database:       options.database,
+		sessionManager: options.sessionManager,
 	}
 }
 
@@ -85,7 +86,7 @@ func (g *goCart) checkDatabase() {
 }
 
 func (g *goCart) checkSessionManager() {
-	if g.database == nil {
-		panic("database must be an object")
+	if g.sessionManager == nil {
+		panic("session manager must be an object")
 	}
 }
