@@ -16,7 +16,7 @@ type LoginRpcIn struct {
 }
 
 type LoginRpcOut struct {
-	Token *string
+	Token *string `json:"token"`
 }
 
 func (h *handle) Login(w http.ResponseWriter, r *http.Request) {
@@ -32,13 +32,15 @@ func (h *handle) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.service.Login(r.Context(), *authLoginInput)
+	token, err := h.service.Login(r.Context(), *authLoginInput)
 	if err != nil {
 		helpers.HttpResponse(w, http.StatusInternalServerError)
 		return
 	}
 
-	helpers.HttpResponse(w, http.StatusOK)
+	helpers.HttpResponse(w, http.StatusOK, LoginRpcOut{
+		Token: token,
+	})
 }
 
 func validateAuthLogin(bodyBytes []byte) (*authService.AuthLoginIn, error) {
