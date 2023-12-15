@@ -4,6 +4,7 @@ import (
 	"github.com/seivanov1986/sql_client"
 
 	"github.com/seivanov1986/gocart/internal/http/auth"
+	"github.com/seivanov1986/gocart/internal/http/file"
 	"github.com/seivanov1986/gocart/internal/http/user"
 	auth2 "github.com/seivanov1986/gocart/internal/middleware/auth"
 	"github.com/seivanov1986/gocart/internal/middleware/common"
@@ -64,6 +65,10 @@ func (g *goCart) AuthHandler() auth.Handle {
 	hub := repository.New(g.database)
 	service := authService.New(hub, g.sessionManager)
 	return auth.New(service)
+}
+
+func (g *goCart) FileHandler() file.Handle {
+	return file.New()
 }
 
 func (g *goCart) AuthMiddleware() auth2.Middleware {
