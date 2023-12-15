@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	Login(ctx context.Context, in UserLoginIn) (*string, error)
+	Login(ctx context.Context, in AuthLoginIn) (*string, error)
 	Logout(sessionId string) error
 }
 

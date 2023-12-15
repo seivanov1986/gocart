@@ -1,0 +1,11 @@
+# github.com/jmoiron/sqlx v1.3.5
+## explicit; go 1.10
+github.com/jmoiron/sqlx
+github.com/jmoiron/sqlx/reflectx
+# github.com/seivanov1986/sql_client v0.0.0-20231214181713-39a2cdcbbca6
+## explicit; go 1.21.3
+github.com/seivanov1986/sql_client
+# golang.org/x/crypto v0.16.0
+## explicit; go 1.18
+golang.org/x/crypto/bcrypt
+golang.org/x/crypto/blowfish

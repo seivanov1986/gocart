@@ -7,12 +7,12 @@ import (
 	"github.com/seivanov1986/gocart/helpers"
 )
 
-type UserLoginIn struct {
+type AuthLoginIn struct {
 	Login    string `db:"login"`
 	Password string `db:"password"`
 }
 
-func (s *service) Login(ctx context.Context, in UserLoginIn) (*string, error) {
+func (s *service) Login(ctx context.Context, in AuthLoginIn) (*string, error) {
 	password, err := s.hub.User().PasswordByLogin(ctx, in.Login)
 	if err != nil {
 		return nil, err
