@@ -5,6 +5,9 @@ import (
 
 	"github.com/seivanov1986/gocart/internal/http/auth"
 	"github.com/seivanov1986/gocart/internal/http/user"
+	auth2 "github.com/seivanov1986/gocart/internal/middleware/auth"
+	"github.com/seivanov1986/gocart/internal/middleware/common"
+	"github.com/seivanov1986/gocart/internal/middleware/cors"
 	"github.com/seivanov1986/gocart/internal/repository"
 	authService "github.com/seivanov1986/gocart/internal/service/auth"
 	user2 "github.com/seivanov1986/gocart/internal/service/user"
@@ -60,6 +63,19 @@ func (g *goCart) AuthHandler() auth.Handle {
 	hub := repository.New(g.database)
 	service := authService.New(hub, g.sessionManager)
 	return auth.New(service)
+}
+
+func (g *goCart) AuthMiddleware() auth2.Middleware {
+	g.checkSessionManager()
+	return auth2.New(g.sessionManager)
+}
+
+func (g *goCart) CommonMiddleware() common.Middleware {
+	return common.New()
+}
+
+func (g *goCart) CorsMiddleware() cors.Middleware {
+	return cors.New()
 }
 
 func (g *goCart) checkDatabase() {
