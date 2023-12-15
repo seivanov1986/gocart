@@ -16,7 +16,13 @@ func (a middleware) Handle(next http.Handler) http.Handler {
 			return
 		}
 
-		if !a.sessionClient.Exists(auth) {
+		ok, err := a.sessionClient.Exists(auth)
+		if err != nil {
+			helpers.HttpResponse(w, http.StatusInternalServerError)
+			return
+		}
+
+		if !ok {
 			helpers.HttpResponse(w, http.StatusUnauthorized)
 			return
 		}
