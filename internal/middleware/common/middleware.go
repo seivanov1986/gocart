@@ -1,7 +1,9 @@
 package common
 
-type middleware struct{}
+type middleware struct {
+	ServiceBasePath string
+}
 
-func New() *middleware {
-	return &middleware{}
+func New(ServiceBasePath string) *middleware {
+	return &middleware{ServiceBasePath: ServiceBasePath}
 }

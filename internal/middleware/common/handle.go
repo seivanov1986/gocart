@@ -12,7 +12,8 @@ func (a middleware) Handle(next http.Handler) http.Handler {
 			}
 		}()
 
-		ctx, cancel := context.WithCancel(r.Context())
+		ctx := context.WithValue(r.Context(), "service_base_path", a.ServiceBasePath)
+		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
 		r = r.WithContext(ctx)
