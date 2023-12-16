@@ -76,8 +76,8 @@ func (g *goCart) AuthMiddleware() auth2.Middleware {
 	return auth2.New(g.sessionManager)
 }
 
-func (g *goCart) CommonMiddleware() common.Middleware {
-	return common.New()
+func (g *goCart) CommonMiddleware(serviceBasePath string) common.Middleware {
+	return common.New(serviceBasePath)
 }
 
 func (g *goCart) CorsMiddleware() cors.Middleware {
