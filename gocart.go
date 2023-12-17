@@ -6,6 +6,7 @@ import (
 	"github.com/seivanov1986/gocart/internal/http/attribute"
 	"github.com/seivanov1986/gocart/internal/http/auth"
 	"github.com/seivanov1986/gocart/internal/http/category"
+	commonHandle "github.com/seivanov1986/gocart/internal/http/common"
 	"github.com/seivanov1986/gocart/internal/http/file"
 	"github.com/seivanov1986/gocart/internal/http/image_to_category"
 	"github.com/seivanov1986/gocart/internal/http/image_to_product"
@@ -22,6 +23,7 @@ import (
 	attributeToProductService "github.com/seivanov1986/gocart/internal/service/attribute_to_product"
 	authService "github.com/seivanov1986/gocart/internal/service/auth"
 	categoryService "github.com/seivanov1986/gocart/internal/service/category"
+	commonService "github.com/seivanov1986/gocart/internal/service/common"
 	imageToCategoryService "github.com/seivanov1986/gocart/internal/service/image_to_category"
 	imageToProductService "github.com/seivanov1986/gocart/internal/service/image_to_product"
 	pageService "github.com/seivanov1986/gocart/internal/service/page"
@@ -179,6 +181,11 @@ func (g *goCart) SefUrlHandler() sefurl.Handle {
 	hub := repository.New(g.database, g.transactionManager)
 	service := sefUrlService.New(hub)
 	return sefurl.New(service)
+}
+
+func (g *goCart) CommonHandler() commonHandle.Handle {
+	service := commonService.New()
+	return commonHandle.New(service)
 }
 
 func (g *goCart) AuthMiddleware() auth2.Middleware {
