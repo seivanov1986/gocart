@@ -22,6 +22,7 @@ import (
 	attributeService "github.com/seivanov1986/gocart/internal/service/attribute"
 	attributeToProductService "github.com/seivanov1986/gocart/internal/service/attribute_to_product"
 	authService "github.com/seivanov1986/gocart/internal/service/auth"
+	"github.com/seivanov1986/gocart/internal/service/cache"
 	categoryService "github.com/seivanov1986/gocart/internal/service/category"
 	commonService "github.com/seivanov1986/gocart/internal/service/common"
 	imageToCategoryService "github.com/seivanov1986/gocart/internal/service/image_to_category"
@@ -31,6 +32,7 @@ import (
 	productToCategoryService "github.com/seivanov1986/gocart/internal/service/product_to_category"
 	sefUrlService "github.com/seivanov1986/gocart/internal/service/sefurl"
 	user2 "github.com/seivanov1986/gocart/internal/service/user"
+	widget2 "github.com/seivanov1986/gocart/internal/widget"
 
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
 )
@@ -39,6 +41,7 @@ type Options struct {
 	database           sql_client.DataBase
 	transactionManager sql_client.TransactionManager
 	sessionManager     SessionManager
+	cacheBuilder       CacheBuilder
 }
 
 type OptionFunc func(*Options)
@@ -61,10 +64,17 @@ func WithSessionManager(sessionManager SessionManager) OptionFunc {
 	}
 }
 
+func WithCacheBuilder(cacheBuilder CacheBuilder) OptionFunc {
+	return func(o *Options) {
+		o.cacheBuilder = cacheBuilder
+	}
+}
+
 type goCart struct {
 	database           sql_client.DataBase
 	transactionManager sql_client.TransactionManager
 	sessionManager     SessionManager
+	cacheBuilder       CacheBuilder
 }
 
 func New(opts ...OptionFunc) *goCart {
@@ -76,6 +86,7 @@ func New(opts ...OptionFunc) *goCart {
 	return &goCart{
 		database:       options.database,
 		sessionManager: options.sessionManager,
+		cacheBuilder:   options.cacheBuilder,
 	}
 }
 
@@ -217,4 +228,18 @@ func (g *goCart) checkSessionManager() {
 	if g.sessionManager == nil {
 		panic("session manager must be an object")
 	}
+}
+
+func (g *goCart) cacheService() cache.Service {
+	if g.cacheBuilder != nil {
+		return cache.New(g.cacheBuilder)
+	}
+
+	g.checkDatabase()
+	g.checkTransactionManager()
+
+	hub := repository.New(g.database, g.transactionManager)
+	widget := widget2.New()
+	cacheBuilder := cache.NewBuilder(hub, widget)
+	return cache.New(cacheBuilder)
 }
