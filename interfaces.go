@@ -24,6 +24,7 @@ type UrlListRow struct {
 type CacheBuilder interface {
 	Pages(ctx context.Context) ([]UrlListRow, error)
 	Handler(ctx context.Context, pages []UrlListRow) error
+	RegisterWidget(name string, widget Widget)
 }
 
 type WidgetManager interface {

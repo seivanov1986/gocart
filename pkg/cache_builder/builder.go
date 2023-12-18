@@ -16,6 +16,10 @@ func NewBuilder(hub repository.Hub, widgetManager gocart.WidgetManager) *builder
 	return &builder{hub: hub, widgetManager: widgetManager}
 }
 
+func (b *builder) RegisterWidget(name string, widget gocart.Widget) {
+	b.widgetManager.Register(name, widget)
+}
+
 func (b *builder) Pages(ctx context.Context) ([]gocart.UrlListRow, error) {
 	return nil, nil
 }

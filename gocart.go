@@ -36,6 +36,7 @@ import (
 	"github.com/seivanov1986/gocart/pkg/widget_manager"
 
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
+	"github.com/seivanov1986/gocart/internal/widget/example"
 )
 
 type Options struct {
@@ -44,6 +45,7 @@ type Options struct {
 	sessionManager     SessionManager
 	cacheBuilder       CacheBuilder
 	widgetManager      WidgetManager
+	buildInWidgets     []string
 }
 
 type OptionFunc func(*Options)
@@ -72,6 +74,12 @@ func WithCacheBuilder(cacheBuilder CacheBuilder) OptionFunc {
 	}
 }
 
+func WithBuildInWidgets(buildInWidgets []string) OptionFunc {
+	return func(o *Options) {
+		o.buildInWidgets = buildInWidgets
+	}
+}
+
 func WithWidgetManager(widgetManager WidgetManager) OptionFunc {
 	return func(o *Options) {
 		o.widgetManager = widgetManager
@@ -84,6 +92,7 @@ type goCart struct {
 	sessionManager     SessionManager
 	cacheBuilder       CacheBuilder
 	widgetManager      WidgetManager
+	buildInWidgets     []string
 }
 
 func New(opts ...OptionFunc) *goCart {
@@ -97,6 +106,7 @@ func New(opts ...OptionFunc) *goCart {
 		sessionManager: options.sessionManager,
 		cacheBuilder:   options.cacheBuilder,
 		widgetManager:  options.widgetManager,
+		buildInWidgets: options.buildInWidgets,
 	}
 }
 
@@ -242,6 +252,7 @@ func (g *goCart) checkSessionManager() {
 
 func (g *goCart) CacheService() cache_service.CacheService {
 	if g.cacheBuilder != nil {
+		g.cacheBuilder.RegisterWidget("example", example.New())
 		return cache_service.New(g.cacheBuilder)
 	}
 
