@@ -3,8 +3,6 @@ package gocart
 import (
 	"context"
 	"time"
-
-	"github.com/seivanov1986/gocart/pkg/cache"
 )
 
 type SessionManager interface {
@@ -15,12 +13,12 @@ type SessionManager interface {
 }
 
 type UrlListRow struct {
-	ID       int64  `db:"id" json:"id"`
-	Url      string `db:"url" json:"url"`
-	Path     string `db:"path" json:"path"`
-	Name     string `db:"name" json:"name"`
-	Type     int64  `db:"type" json:"type"`
-	IdObject int64  `db:"id_object" json:"id_object"`
+	ID       int64
+	Url      string
+	Path     string
+	Name     string
+	Type     int64
+	IdObject int64
 }
 
 type CacheBuilder interface {
@@ -31,7 +29,8 @@ type CacheBuilder interface {
 type WidgetManager interface {
 	Render(ctx context.Context, name string) (*string, error)
 	Register(name string, widget Widget)
-	SetResources(resources cache.BuilderResources)
 }
 
-type Widget func(ctx context.Context, resources cache.BuilderResources) (*string, error)
+type Widget interface {
+	Execute() (*string, error)
+}

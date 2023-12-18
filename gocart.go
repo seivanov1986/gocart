@@ -31,9 +31,9 @@ import (
 	productToCategoryService "github.com/seivanov1986/gocart/internal/service/product_to_category"
 	sefUrlService "github.com/seivanov1986/gocart/internal/service/sefurl"
 	user2 "github.com/seivanov1986/gocart/internal/service/user"
-	"github.com/seivanov1986/gocart/pkg/cache"
-	exampleWidget "github.com/seivanov1986/gocart/pkg/widget/example"
-	widgetManager "github.com/seivanov1986/gocart/pkg/widget/manager"
+	"github.com/seivanov1986/gocart/pkg/cache_builder"
+	"github.com/seivanov1986/gocart/pkg/cache_service"
+	"github.com/seivanov1986/gocart/pkg/widget_manager"
 
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
 )
@@ -240,9 +240,9 @@ func (g *goCart) checkSessionManager() {
 	}
 }
 
-func (g *goCart) cacheService() cache.Service {
+func (g *goCart) CacheService() cache_service.CacheService {
 	if g.cacheBuilder != nil {
-		return cache.New(g.cacheBuilder)
+		return cache_service.New(g.cacheBuilder)
 	}
 
 	g.checkDatabase()
@@ -250,10 +250,9 @@ func (g *goCart) cacheService() cache.Service {
 
 	hub := repository.New(g.database, g.transactionManager)
 	if g.widgetManager == nil {
-		g.widgetManager = widgetManager.New()
+		g.widgetManager = widget_manager.New()
 	}
 
-	g.widgetManager.Register("example", exampleWidget.Widget)
-	cacheBuilder := cache.NewBuilder(hub, g.widgetManager)
-	return cache.New(cacheBuilder)
+	cacheBuilder := cache_builder.NewBuilder(hub, g.widgetManager)
+	return cache_service.New(cacheBuilder)
 }
