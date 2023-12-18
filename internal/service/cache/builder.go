@@ -9,12 +9,12 @@ import (
 )
 
 type builder struct {
-	hub    repository.Hub
-	widget gocart.Widget
+	hub           repository.Hub
+	widgetManager gocart.WidgetManager
 }
 
-func NewBuilder(hub repository.Hub, widget gocart.Widget) *builder {
-	return &builder{hub: hub, widget: widget}
+func NewBuilder(hub repository.Hub, widgetManager gocart.WidgetManager) *builder {
+	return &builder{hub: hub, widgetManager: widgetManager}
 }
 
 func (b *builder) Pages(ctx context.Context) ([]sefurl.SefUrlListRow, error) {

@@ -32,7 +32,8 @@ import (
 	productToCategoryService "github.com/seivanov1986/gocart/internal/service/product_to_category"
 	sefUrlService "github.com/seivanov1986/gocart/internal/service/sefurl"
 	user2 "github.com/seivanov1986/gocart/internal/service/user"
-	widget2 "github.com/seivanov1986/gocart/internal/widget"
+	exampleWidget "github.com/seivanov1986/gocart/internal/widget/example"
+	widgetManager "github.com/seivanov1986/gocart/internal/widget/manager"
 
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
 )
@@ -239,7 +240,8 @@ func (g *goCart) cacheService() cache.Service {
 	g.checkTransactionManager()
 
 	hub := repository.New(g.database, g.transactionManager)
-	widget := widget2.New()
-	cacheBuilder := cache.NewBuilder(hub, widget)
+	widgetManager := widgetManager.New()
+	widgetManager.Register("example", exampleWidget.Widget)
+	cacheBuilder := cache.NewBuilder(hub, widgetManager)
 	return cache.New(cacheBuilder)
 }

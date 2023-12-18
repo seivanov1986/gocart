@@ -19,6 +19,9 @@ type CacheBuilder interface {
 	Handler(ctx context.Context, pages []sefurl.SefUrlListRow) error
 }
 
-type Widget interface {
+type WidgetManager interface {
 	Render(ctx context.Context, name string) (*string, error)
+	Register(name string, widget Widget)
 }
+
+type Widget func(ctx context.Context) (*string, error)
