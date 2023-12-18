@@ -2,10 +2,12 @@ package manager
 
 import (
 	"github.com/seivanov1986/gocart"
+	"github.com/seivanov1986/gocart/internal/service/cache"
 )
 
 type widgetManager struct {
-	widgets map[string]gocart.Widget
+	widgets   map[string]gocart.Widget
+	resources cache.BuilderResources
 }
 
 func New() *widgetManager {

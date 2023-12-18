@@ -8,13 +8,26 @@ import (
 	"github.com/seivanov1986/gocart/internal/repository/sefurl"
 )
 
+type BuilderResources struct {
+	hub       repository.Hub
+	schemaOrg SchemaOrg
+	assets    Assets
+}
+
 type builder struct {
-	hub           repository.Hub
+	resources     BuilderResources
 	widgetManager gocart.WidgetManager
 }
 
 func NewBuilder(hub repository.Hub, widgetManager gocart.WidgetManager) *builder {
-	return &builder{hub: hub, widgetManager: widgetManager}
+	resources := BuilderResources{
+		hub:       hub,
+		schemaOrg: NewSchemaOrg(),
+		assets:    NewAsset(),
+	}
+
+	widgetManager.SetResources(resources)
+	return &builder{resources: resources, widgetManager: widgetManager}
 }
 
 func (b *builder) Pages(ctx context.Context) ([]sefurl.SefUrlListRow, error) {
@@ -22,5 +35,7 @@ func (b *builder) Pages(ctx context.Context) ([]sefurl.SefUrlListRow, error) {
 }
 
 func (b *builder) Handler(ctx context.Context, pages []sefurl.SefUrlListRow) error {
+	b.widgetManager.Render(ctx, "example")
+
 	return nil
 }

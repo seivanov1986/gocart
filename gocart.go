@@ -43,6 +43,7 @@ type Options struct {
 	transactionManager sql_client.TransactionManager
 	sessionManager     SessionManager
 	cacheBuilder       CacheBuilder
+	widgetManager      WidgetManager
 }
 
 type OptionFunc func(*Options)
@@ -71,11 +72,18 @@ func WithCacheBuilder(cacheBuilder CacheBuilder) OptionFunc {
 	}
 }
 
+func WithWidgetManager(widgetManager WidgetManager) OptionFunc {
+	return func(o *Options) {
+		o.widgetManager = widgetManager
+	}
+}
+
 type goCart struct {
 	database           sql_client.DataBase
 	transactionManager sql_client.TransactionManager
 	sessionManager     SessionManager
 	cacheBuilder       CacheBuilder
+	widgetManager      WidgetManager
 }
 
 func New(opts ...OptionFunc) *goCart {
@@ -88,6 +96,7 @@ func New(opts ...OptionFunc) *goCart {
 		database:       options.database,
 		sessionManager: options.sessionManager,
 		cacheBuilder:   options.cacheBuilder,
+		widgetManager:  options.widgetManager,
 	}
 }
 
@@ -240,8 +249,11 @@ func (g *goCart) cacheService() cache.Service {
 	g.checkTransactionManager()
 
 	hub := repository.New(g.database, g.transactionManager)
-	widgetManager := widgetManager.New()
-	widgetManager.Register("example", exampleWidget.Widget)
-	cacheBuilder := cache.NewBuilder(hub, widgetManager)
+	if g.widgetManager == nil {
+		g.widgetManager = widgetManager.New()
+	}
+
+	g.widgetManager.Register("example", exampleWidget.Widget)
+	cacheBuilder := cache.NewBuilder(hub, g.widgetManager)
 	return cache.New(cacheBuilder)
 }

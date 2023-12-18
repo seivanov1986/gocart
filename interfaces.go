@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/seivanov1986/gocart/internal/repository/sefurl"
+	"github.com/seivanov1986/gocart/internal/service/cache"
 )
 
 type SessionManager interface {
@@ -22,6 +23,7 @@ type CacheBuilder interface {
 type WidgetManager interface {
 	Render(ctx context.Context, name string) (*string, error)
 	Register(name string, widget Widget)
+	SetResources(resources cache.BuilderResources)
 }
 
-type Widget func(ctx context.Context) (*string, error)
+type Widget func(ctx context.Context, resources cache.BuilderResources) (*string, error)
