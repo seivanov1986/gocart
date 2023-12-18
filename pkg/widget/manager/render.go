@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/seivanov1986/gocart/internal/service/cache"
+	"github.com/seivanov1986/gocart/pkg/cache"
 )
 
 func (w *widgetManager) Render(ctx context.Context, name string) (*string, error) {

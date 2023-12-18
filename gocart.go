@@ -22,7 +22,6 @@ import (
 	attributeService "github.com/seivanov1986/gocart/internal/service/attribute"
 	attributeToProductService "github.com/seivanov1986/gocart/internal/service/attribute_to_product"
 	authService "github.com/seivanov1986/gocart/internal/service/auth"
-	"github.com/seivanov1986/gocart/internal/service/cache"
 	categoryService "github.com/seivanov1986/gocart/internal/service/category"
 	commonService "github.com/seivanov1986/gocart/internal/service/common"
 	imageToCategoryService "github.com/seivanov1986/gocart/internal/service/image_to_category"
@@ -32,8 +31,9 @@ import (
 	productToCategoryService "github.com/seivanov1986/gocart/internal/service/product_to_category"
 	sefUrlService "github.com/seivanov1986/gocart/internal/service/sefurl"
 	user2 "github.com/seivanov1986/gocart/internal/service/user"
-	exampleWidget "github.com/seivanov1986/gocart/internal/widget/example"
-	widgetManager "github.com/seivanov1986/gocart/internal/widget/manager"
+	"github.com/seivanov1986/gocart/pkg/cache"
+	exampleWidget "github.com/seivanov1986/gocart/pkg/widget/example"
+	widgetManager "github.com/seivanov1986/gocart/pkg/widget/manager"
 
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
 )

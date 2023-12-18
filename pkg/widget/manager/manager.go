@@ -2,7 +2,7 @@ package manager
 
 import (
 	"github.com/seivanov1986/gocart"
-	"github.com/seivanov1986/gocart/internal/service/cache"
+	"github.com/seivanov1986/gocart/pkg/cache"
 )
 
 type widgetManager struct {

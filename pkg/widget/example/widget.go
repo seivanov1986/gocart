@@ -3,7 +3,7 @@ package example
 import (
 	"context"
 
-	"github.com/seivanov1986/gocart/internal/service/cache"
+	"github.com/seivanov1986/gocart/pkg/cache"
 )
 
 const (

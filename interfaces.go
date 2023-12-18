@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/seivanov1986/gocart/internal/repository/sefurl"
-	"github.com/seivanov1986/gocart/internal/service/cache"
+	"github.com/seivanov1986/gocart/pkg/cache"
 )
 
 type SessionManager interface {
