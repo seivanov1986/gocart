@@ -5,7 +5,6 @@ import (
 
 	"github.com/seivanov1986/gocart"
 	"github.com/seivanov1986/gocart/internal/repository"
-	"github.com/seivanov1986/gocart/internal/repository/sefurl"
 )
 
 type BuilderResources struct {
@@ -30,11 +29,11 @@ func NewBuilder(hub repository.Hub, widgetManager gocart.WidgetManager) *builder
 	return &builder{resources: resources, widgetManager: widgetManager}
 }
 
-func (b *builder) Pages(ctx context.Context) ([]sefurl.SefUrlListRow, error) {
+func (b *builder) Pages(ctx context.Context) ([]gocart.UrlListRow, error) {
 	return nil, nil
 }
 
-func (b *builder) Handler(ctx context.Context, pages []sefurl.SefUrlListRow) error {
+func (b *builder) Handler(ctx context.Context, pages []gocart.UrlListRow) error {
 	b.widgetManager.Render(ctx, "example")
 
 	return nil
