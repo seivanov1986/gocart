@@ -3,6 +3,9 @@ package gocart
 import (
 	"github.com/seivanov1986/sql_client"
 
+	"github.com/seivanov1986/gocart/external/cache_builder"
+	"github.com/seivanov1986/gocart/external/cache_service"
+	"github.com/seivanov1986/gocart/external/widget_manager"
 	"github.com/seivanov1986/gocart/internal/http/attribute"
 	"github.com/seivanov1986/gocart/internal/http/auth"
 	"github.com/seivanov1986/gocart/internal/http/category"
@@ -31,13 +34,10 @@ import (
 	productToCategoryService "github.com/seivanov1986/gocart/internal/service/product_to_category"
 	sefUrlService "github.com/seivanov1986/gocart/internal/service/sefurl"
 	user2 "github.com/seivanov1986/gocart/internal/service/user"
-	"github.com/seivanov1986/gocart/pkg/cache_builder"
-	"github.com/seivanov1986/gocart/pkg/cache_service"
-	"github.com/seivanov1986/gocart/pkg/widget_manager"
 
+	"github.com/seivanov1986/gocart/client"
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
 	"github.com/seivanov1986/gocart/internal/widget/example"
-	"github.com/seivanov1986/gocart/client"
 )
 
 type Options struct {

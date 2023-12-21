@@ -1,38 +1,39 @@
 package asset_manager
 
 import (
+	"bytes"
+	"html/template"
 	"os"
 	"sort"
 	"strings"
 	"time"
-	"bytes"
-	"html/template"
+
 	"github.com/seivanov1986/gocart/client"
 )
 
 type assetManager struct {
-	jsList map[string]client.AssetOption
-	cssList map[string]client.AssetOption
+	jsList      map[string]client.AssetOption
+	cssList     map[string]client.AssetOption
 	preloadList map[string]client.AssetOption
 }
 
 func New() *assetManager {
 	return &assetManager{
-		jsList: map[string]client.AssetOption{},
-		cssList: map[string]client.AssetOption{},
+		jsList:      map[string]client.AssetOption{},
+		cssList:     map[string]client.AssetOption{},
 		preloadList: map[string]client.AssetOption{},
 	}
 }
 
 func (a assetManager) AddJsList(pathList []client.AssetItemDependency) {
-	for _,v := range pathList {
+	for _, v := range pathList {
 		pathIndex, ok := a.jsList[v.Path]
 		if !ok {
 			pathIndex = client.AssetOption{Sort: 0}
 
-			for index,p := range a.jsList {
+			for index, p := range a.jsList {
 				value := a.jsList[index]
-				value.Sort = p.Sort+1
+				value.Sort = p.Sort + 1
 				a.jsList[index] = value
 			}
 
@@ -43,11 +44,11 @@ func (a assetManager) AddJsList(pathList []client.AssetItemDependency) {
 			depIndex, ok := a.jsList[dep]
 			if !ok {
 				value := a.jsList[dep]
-				value.Sort = pathIndex.Sort+1
+				value.Sort = pathIndex.Sort + 1
 				a.jsList[dep] = value
 			} else if depIndex.Sort <= pathIndex.Sort {
 				value := a.jsList[dep]
-				value.Sort = pathIndex.Sort+1
+				value.Sort = pathIndex.Sort + 1
 				a.jsList[dep] = value
 			}
 		}
@@ -55,14 +56,14 @@ func (a assetManager) AddJsList(pathList []client.AssetItemDependency) {
 }
 
 func (a assetManager) AddCssList(pathList []client.AssetItemDependency) {
-	for _,v := range pathList {
+	for _, v := range pathList {
 		pathIndex, ok := a.cssList[v.Path]
 		if !ok {
 			pathIndex = client.AssetOption{Sort: 0, Type: v.Type, Preload: v.Preload}
 
-			for index,p := range a.cssList {
+			for index, p := range a.cssList {
 				value := a.cssList[index]
-				value.Sort = p.Sort+1
+				value.Sort = p.Sort + 1
 				a.cssList[index] = value
 			}
 
@@ -73,11 +74,11 @@ func (a assetManager) AddCssList(pathList []client.AssetItemDependency) {
 			depIndex, ok := a.cssList[dep]
 			if !ok {
 				value := a.cssList[dep]
-				value.Sort = pathIndex.Sort+1
+				value.Sort = pathIndex.Sort + 1
 				a.cssList[dep] = value
 			} else if depIndex.Sort <= pathIndex.Sort {
 				value := a.cssList[dep]
-				value.Sort = pathIndex.Sort+1
+				value.Sort = pathIndex.Sort + 1
 				a.cssList[dep] = value
 			}
 		}
@@ -85,14 +86,14 @@ func (a assetManager) AddCssList(pathList []client.AssetItemDependency) {
 }
 
 func (a assetManager) AddPreloadList(pathList []client.AssetItemDependency) {
-	for _,v := range pathList {
+	for _, v := range pathList {
 		pathIndex, ok := a.preloadList[v.Path]
 		if !ok {
 			pathIndex = client.AssetOption{Sort: 0, Type: v.Type, Preload: v.Preload}
 
-			for index,p := range a.preloadList {
+			for index, p := range a.preloadList {
 				value := a.preloadList[index]
-				value.Sort = p.Sort+1
+				value.Sort = p.Sort + 1
 				a.preloadList[index] = value
 			}
 
@@ -103,11 +104,11 @@ func (a assetManager) AddPreloadList(pathList []client.AssetItemDependency) {
 			depIndex, ok := a.preloadList[dep]
 			if !ok {
 				value := a.preloadList[dep]
-				value.Sort = pathIndex.Sort+1
+				value.Sort = pathIndex.Sort + 1
 				a.preloadList[dep] = value
 			} else if depIndex.Sort <= pathIndex.Sort {
 				value := a.preloadList[dep]
-				value.Sort = pathIndex.Sort+1
+				value.Sort = pathIndex.Sort + 1
 				a.preloadList[dep] = value
 			}
 		}
@@ -125,16 +126,16 @@ func (a assetManager) GetJsList() []client.ResultList {
 	var sorted_struct []key_value
 
 	for key, value := range a.jsList {
-		sorted_struct = append(sorted_struct , key_value {key, value})
+		sorted_struct = append(sorted_struct, key_value{key, value})
 	}
 
-	sort.Slice(sorted_struct , func(i, j int) bool {
+	sort.Slice(sorted_struct, func(i, j int) bool {
 		return sorted_struct[i].Value.Sort > sorted_struct[j].Value.Sort
 	})
 
 	result := make([]client.ResultList, 0, len(a.jsList))
 
-	for _,v := range sorted_struct {
+	for _, v := range sorted_struct {
 		modifiedtime := time.Now()
 
 		if strings.HasPrefix(v.Key, "/static") {
@@ -147,9 +148,9 @@ func (a assetManager) GetJsList() []client.ResultList {
 		}
 
 		result = append(result, client.ResultList{
-			Path: v.Key,
-			Time: modifiedtime.Unix(),
-			Type: v.Value.Type,
+			Path:    v.Key,
+			Time:    modifiedtime.Unix(),
+			Type:    v.Value.Type,
 			Preload: v.Value.Preload,
 		})
 	}
@@ -168,16 +169,16 @@ func (a assetManager) GetCssList() []client.ResultList {
 	var sorted_struct []key_value
 
 	for key, value := range a.cssList {
-		sorted_struct = append(sorted_struct , key_value {key, value})
+		sorted_struct = append(sorted_struct, key_value{key, value})
 	}
 
-	sort.Slice(sorted_struct , func(i, j int) bool {
+	sort.Slice(sorted_struct, func(i, j int) bool {
 		return sorted_struct[i].Value.Sort > sorted_struct[j].Value.Sort
 	})
 
 	result := make([]client.ResultList, 0, len(a.cssList))
 
-	for _,v := range sorted_struct {
+	for _, v := range sorted_struct {
 		modifiedtime := time.Now()
 
 		if strings.HasPrefix(v.Key, "/static") {
@@ -191,9 +192,9 @@ func (a assetManager) GetCssList() []client.ResultList {
 		}
 
 		result = append(result, client.ResultList{
-			Path: v.Key,
-			Time: modifiedtime.Unix(),
-			Type: v.Value.Type,
+			Path:    v.Key,
+			Time:    modifiedtime.Unix(),
+			Type:    v.Value.Type,
 			Preload: v.Value.Preload,
 		})
 	}
@@ -212,16 +213,16 @@ func (a assetManager) GetPreloadList() []client.ResultList {
 	var sorted_struct []key_value
 
 	for key, value := range a.preloadList {
-		sorted_struct = append(sorted_struct , key_value {key, value})
+		sorted_struct = append(sorted_struct, key_value{key, value})
 	}
 
-	sort.Slice(sorted_struct , func(i, j int) bool {
+	sort.Slice(sorted_struct, func(i, j int) bool {
 		return sorted_struct[i].Value.Sort > sorted_struct[j].Value.Sort
 	})
 
 	result := make([]client.ResultList, 0, len(a.preloadList))
 
-	for _,v := range sorted_struct {
+	for _, v := range sorted_struct {
 		modifiedtime := time.Now()
 
 		if strings.HasPrefix(v.Key, "/static") {
@@ -235,9 +236,9 @@ func (a assetManager) GetPreloadList() []client.ResultList {
 		}
 
 		result = append(result, client.ResultList{
-			Path: v.Key,
-			Time: modifiedtime.Unix(),
-			Type: v.Value.Type,
+			Path:    v.Key,
+			Time:    modifiedtime.Unix(),
+			Type:    v.Value.Type,
 			Preload: v.Value.Preload,
 		})
 	}
