@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+type Observer interface {
+	GetServiceBasePath(ctx context.Context) string
+	SetServiceBasePath(ctx context.Context, path string) context.Context
+}
+
 type WidgetManager interface {
 	Render(ctx context.Context, name string) (*string, error)
 	Register(name string, widget Widget)
@@ -39,22 +44,22 @@ type SessionManager interface {
 }
 
 type AssetOption struct {
-	Sort int64
-	Type string
+	Sort    int64
+	Type    string
 	Preload bool
 }
 
 type AssetItemDependency struct {
-	Path string
-	Type string
-	Preload bool
+	Path       string
+	Type       string
+	Preload    bool
 	Dependency []string
 }
 
 type ResultList struct {
-	Path string
-	Time int64
-	Type string
+	Path    string
+	Time    int64
+	Type    string
 	Preload bool
 }
 
