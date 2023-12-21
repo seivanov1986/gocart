@@ -6,7 +6,7 @@ import (
 )
 
 type CacheService interface {
-	Make()
+	Make(ctx context.Context)
 }
 
 type cacheService struct {
@@ -17,8 +17,7 @@ func New(cacheBuilder client.CacheBuilder) *cacheService {
 	return &cacheService{cacheBuilder: cacheBuilder}
 }
 
-func (c *cacheService) Make() {
-	ctx := context.Background()
+func (c *cacheService) Make(ctx context.Context) {
 	pages, _ := c.cacheBuilder.Pages(ctx)
 	c.cacheBuilder.Handler(ctx, pages)
 }

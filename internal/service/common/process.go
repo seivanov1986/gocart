@@ -11,7 +11,7 @@ import (
 func (s *service) Process(ctx context.Context, path string) ([]byte, error) {
 	fileName := helpers.GetFileNameByUrl(path)
 
-	fileReader, err := os.Open(baseStoragePath + "/cache/" + fileName)
+	fileReader, err := os.Open("/tmp/cache/" + fileName)
 	if err != nil {
 		return nil, err
 	}

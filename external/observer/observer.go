@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	serviceBasePath = "SERVICE_BASE_PATH"
+	serviceBasePath = "service_base_path"
 )
 
 type observer struct {
