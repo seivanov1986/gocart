@@ -2,7 +2,7 @@ package cache_service
 
 import (
 	"context"
-	"github.com/seivanov1986/gocart"
+	"github.com/seivanov1986/gocart/client"
 )
 
 type CacheService interface {
@@ -10,13 +10,15 @@ type CacheService interface {
 }
 
 type cacheService struct {
-	cacheBuilder gocart.CacheBuilder
+	cacheBuilder client.CacheBuilder
 }
 
-func New(cacheBuilder gocart.CacheBuilder) *cacheService {
+func New(cacheBuilder client.CacheBuilder) *cacheService {
 	return &cacheService{cacheBuilder: cacheBuilder}
 }
 
 func (c *cacheService) Make() {
-	c.cacheBuilder.Pages(context.Background())
+	ctx := context.Background()
+	pages, _ := c.cacheBuilder.Pages(ctx)
+	c.cacheBuilder.Handler(ctx, pages)
 }

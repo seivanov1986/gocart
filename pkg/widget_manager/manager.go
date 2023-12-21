@@ -4,20 +4,25 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/seivanov1986/gocart"
+	"github.com/seivanov1986/gocart/client"
 )
 
 type widgetManager struct {
-	widgets   map[string]gocart.Widget
+	widgets   map[string]client.Widget
+	assetManager client.AssetManager
 }
 
 func New() *widgetManager {
 	return &widgetManager{
-		widgets: map[string]gocart.Widget{},
+		widgets: map[string]client.Widget{},
 	}
 }
 
-func (w *widgetManager) Register(name string, widget gocart.Widget) {
+func (w *widgetManager) SetAssets(assetManager client.AssetManager) {
+	w.assetManager = assetManager
+}
+
+func (w *widgetManager) Register(name string, widget client.Widget) {
 	w.widgets[name] = widget
 }
 

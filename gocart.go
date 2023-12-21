@@ -37,14 +37,15 @@ import (
 
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
 	"github.com/seivanov1986/gocart/internal/widget/example"
+	"github.com/seivanov1986/gocart/client"
 )
 
 type Options struct {
 	database           sql_client.DataBase
 	transactionManager sql_client.TransactionManager
-	sessionManager     SessionManager
-	cacheBuilder       CacheBuilder
-	widgetManager      WidgetManager
+	sessionManager     client.SessionManager
+	cacheBuilder       client.CacheBuilder
+	widgetManager      client.WidgetManager
 	buildInWidgets     []string
 }
 
@@ -62,13 +63,13 @@ func WithTransactionManager(trx sql_client.TransactionManager) OptionFunc {
 	}
 }
 
-func WithSessionManager(sessionManager SessionManager) OptionFunc {
+func WithSessionManager(sessionManager client.SessionManager) OptionFunc {
 	return func(o *Options) {
 		o.sessionManager = sessionManager
 	}
 }
 
-func WithCacheBuilder(cacheBuilder CacheBuilder) OptionFunc {
+func WithCacheBuilder(cacheBuilder client.CacheBuilder) OptionFunc {
 	return func(o *Options) {
 		o.cacheBuilder = cacheBuilder
 	}
@@ -80,7 +81,7 @@ func WithBuildInWidgets(buildInWidgets []string) OptionFunc {
 	}
 }
 
-func WithWidgetManager(widgetManager WidgetManager) OptionFunc {
+func WithWidgetManager(widgetManager client.WidgetManager) OptionFunc {
 	return func(o *Options) {
 		o.widgetManager = widgetManager
 	}
@@ -89,9 +90,9 @@ func WithWidgetManager(widgetManager WidgetManager) OptionFunc {
 type goCart struct {
 	database           sql_client.DataBase
 	transactionManager sql_client.TransactionManager
-	sessionManager     SessionManager
-	cacheBuilder       CacheBuilder
-	widgetManager      WidgetManager
+	sessionManager     client.SessionManager
+	cacheBuilder       client.CacheBuilder
+	widgetManager      client.WidgetManager
 	buildInWidgets     []string
 }
 
