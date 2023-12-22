@@ -3,12 +3,9 @@ package client
 import (
 	"context"
 	"time"
+	"io"
+	"net/http"
 )
-
-type Observer interface {
-	GetServiceBasePath(ctx context.Context) string
-	SetServiceBasePath(ctx context.Context, path string) context.Context
-}
 
 type WidgetManager interface {
 	Render(ctx context.Context, name string) (*string, error)
@@ -19,6 +16,10 @@ type WidgetManager interface {
 type Widget interface {
 	Execute() (*string, error)
 	SetAssets(assetManager AssetManager)
+}
+
+type AjaxHandler interface {
+	Execute(header http.Header, body io.ReadCloser) (*string, error)
 }
 
 type UrlListRow struct {
