@@ -3,11 +3,11 @@ package file
 const (
 	serviceBasePathKey       = "service_base_path"
 	adminPrefix              = "/admin/static"
-	adminPostfix             = "/service/schemes/admin/index.html"
-	serviceBasePathPostfix   = "/service/schemes/admin"
+	adminPostfix             = "/schemes/admin/index.html"
+	serviceBasePathPostfix   = "/schemes/admin"
 	dynamicPrefix            = "/tmp/project/images/"
 	stripPrefix              = "/static"
-	fileServerHandlerPostfix = "/service/schemes/public"
+	fileServerHandlerPostfix = "/schemes/public"
 )
 
 type handle struct {

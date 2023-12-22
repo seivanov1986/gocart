@@ -3,6 +3,9 @@ package gocart
 import (
 	"github.com/seivanov1986/sql_client"
 
+	"github.com/gorilla/mux"
+	"net/http"
+
 	"github.com/seivanov1986/gocart/external/cache_builder"
 	"github.com/seivanov1986/gocart/external/cache_service"
 	"github.com/seivanov1986/gocart/external/widget_manager"
@@ -33,7 +36,7 @@ import (
 	productService "github.com/seivanov1986/gocart/internal/service/product"
 	productToCategoryService "github.com/seivanov1986/gocart/internal/service/product_to_category"
 	sefUrlService "github.com/seivanov1986/gocart/internal/service/sefurl"
-	user2 "github.com/seivanov1986/gocart/internal/service/user"
+	userService "github.com/seivanov1986/gocart/internal/service/user"
 
 	"github.com/seivanov1986/gocart/client"
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
@@ -116,7 +119,7 @@ func (g *goCart) UserHttpHandler() user.Handle {
 	g.checkTransactionManager()
 
 	hub := repository.New(g.database, g.transactionManager)
-	service := user2.New(hub)
+	service := userService.New(hub)
 	return user.New(service)
 }
 
@@ -267,4 +270,91 @@ func (g *goCart) CacheService() cache_service.CacheService {
 
 	cacheBuilder := cache_builder.NewBuilder(hub, g.widgetManager)
 	return cache_service.New(cacheBuilder)
+}
+
+func (g *goCart) InitAuthHandles(router *mux.Router) {
+	router.HandleFunc("/login", g.AuthHandler().Login).
+		Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/logout", g.AuthHandler().Logout).
+		Methods(http.MethodPost)
+}
+
+func (g *goCart) InitAdminHandles(router *mux.Router) {
+	pageRouter := router.PathPrefix("/page").Subrouter()
+	g.InitPageHandles(pageRouter)
+
+	categoryRouter := router.PathPrefix("/category").Subrouter()
+	g.InitCategoryHandles(categoryRouter)
+
+	productRouter := router.PathPrefix("/product").Subrouter()
+	g.InitProductHandles(productRouter)
+
+	userRouter := router.PathPrefix("/user").Subrouter()
+	g.InitUserHandles(userRouter)
+
+	attributeRouter := router.PathPrefix("/attribute").Subrouter()
+	g.InitAttributeHandles(attributeRouter)
+
+	router.HandleFunc("/ping", g.AuthHandler().Ping).
+		Methods(http.MethodPost, http.MethodOptions)
+}
+
+func (g *goCart) InitPageHandles(router *mux.Router) {
+	hub := repository.New(g.database, g.transactionManager)
+	pageService := pageService.New(hub, g.transactionManager)
+	pageHandle := page.New(pageService)
+
+	router.HandleFunc("/create", pageHandle.Create).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/read", pageHandle.Read).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/update", pageHandle.Update).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/delete", pageHandle.Delete).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/list", pageHandle.List).Methods(http.MethodPost, http.MethodOptions)
+}
+
+func (g *goCart) InitCategoryHandles(router *mux.Router) {
+	hub := repository.New(g.database, g.transactionManager)
+	categoryService := categoryService.New(hub, g.transactionManager)
+	categoryHandle := category.New(categoryService)
+
+	router.HandleFunc("/create", categoryHandle.Create).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/read", categoryHandle.Read).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/update", categoryHandle.Update).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/delete", categoryHandle.Delete).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/list", categoryHandle.List).Methods(http.MethodPost, http.MethodOptions)
+}
+
+func (g *goCart) InitProductHandles(router *mux.Router) {
+	hub := repository.New(g.database, g.transactionManager)
+	productService := productService.New(hub, g.transactionManager)
+	productHandle := product.New(productService)
+
+	router.HandleFunc("/create", productHandle.Create).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/read", productHandle.Read).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/update", productHandle.Update).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/delete", productHandle.Delete).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/list", productHandle.List).Methods(http.MethodPost, http.MethodOptions)
+}
+
+func (g *goCart) InitUserHandles(router *mux.Router) {
+	hub := repository.New(g.database, g.transactionManager)
+	userService := userService.New(hub)
+	userHandle := user.New(userService)
+
+	router.HandleFunc("/create", userHandle.Create).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/read", userHandle.Read).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/update", userHandle.Update).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/delete", userHandle.Delete).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/list", userHandle.List).Methods(http.MethodPost, http.MethodOptions)
+}
+
+func (g *goCart) InitAttributeHandles(router *mux.Router) {
+	hub := repository.New(g.database, g.transactionManager)
+	attributeService := attributeService.New(hub)
+	attributeHandle := attribute.New(attributeService)
+
+	router.HandleFunc("/create", attributeHandle.Create).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/read", attributeHandle.Read).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/update", attributeHandle.Update).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/delete", attributeHandle.Delete).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/list", attributeHandle.List).Methods(http.MethodPost, http.MethodOptions)
 }

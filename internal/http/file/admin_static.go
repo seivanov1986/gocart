@@ -7,11 +7,11 @@ import (
 	"strings"
 
 	"github.com/seivanov1986/gocart/helpers"
+	"github.com/seivanov1986/gocart/external/observer"
 )
 
 func (c *handle) AdminStatic(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	serviceBasePath := ctx.Value(serviceBasePathKey).(string)
+	serviceBasePath := observer.GetServiceBasePath(r.Context())
 
 	if !strings.HasPrefix(r.URL.Path, adminPrefix) {
 		fileReader, err := os.Open(serviceBasePath + adminPostfix)
