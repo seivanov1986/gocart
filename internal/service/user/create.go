@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/seivanov1986/gocart/internal/repository/user"
+	"github.com/seivanov1986/gocart/helpers"
 )
 
 type UserCreateIn struct {
@@ -16,10 +17,15 @@ type UserCreateIn struct {
 }
 
 func (s *service) Create(ctx context.Context, in UserCreateIn) (*int64, error) {
+	hash, err := helpers.GenerateHashPassword(in.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	return s.hub.User().Create(ctx, user.UserCreateInput{
 		Login:     in.Login,
 		Email:     in.Email,
-		Password:  "",
+		Password:  hash,
 		Active:    in.Active,
 		CreatedAt: in.CreatedAt,
 	})
