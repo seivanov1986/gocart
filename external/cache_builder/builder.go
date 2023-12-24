@@ -2,15 +2,16 @@ package cache_builder
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/seivanov1986/gocart/client"
 	"github.com/seivanov1986/gocart/internal/repository"
 )
 
 type builder struct {
-	hub repository.Hub
+	hub           repository.Hub
 	widgetManager client.WidgetManager
-	assetManager client.AssetManager
+	assetManager  client.AssetManager
 }
 
 func NewBuilder(hub repository.Hub, widgetManager client.WidgetManager) *builder {
@@ -26,9 +27,11 @@ func (b *builder) SetAssets(assetManager client.AssetManager) {
 }
 
 func (b *builder) Pages(ctx context.Context) ([]client.UrlListRow, error) {
+	fmt.Println("get pages")
 	return nil, nil
 }
 
 func (b *builder) Handler(ctx context.Context, pages []client.UrlListRow) error {
+	fmt.Println("get handler")
 	return nil
 }
