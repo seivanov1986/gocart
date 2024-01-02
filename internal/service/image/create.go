@@ -9,22 +9,26 @@ import (
 )
 
 type ImageCreateIn struct {
-	Name      string
-	ParentID  int64
-	Path      string
-	FType     int64
-	CreatedAT int64
+	Name       string
+	ParentID   int64
+	Path       string
+	FType      int64
+	CreatedAT  int64
+	OriginPath string
+	UID        string
 }
 
 func (u *service) Create(ctx context.Context, in ImageCreateIn) error {
 	// GET path from parent
 
 	err := u.hub.Image().Create(ctx, image.ImageCreateInput{
-		Name:      in.Name,
-		ParentID:  in.ParentID,
-		Path:      "/",
-		FType:     in.FType,
-		CreatedAT: in.CreatedAT,
+		Name:       in.Name,
+		ParentID:   in.ParentID,
+		Path:       "/",
+		FType:      in.FType,
+		CreatedAT:  in.CreatedAT,
+		OriginPath: in.OriginPath,
+		UID:        in.UID,
 	})
 	if err != nil {
 		return err
