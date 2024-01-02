@@ -3,6 +3,8 @@ package image
 import (
 	"context"
 
+	"github.com/disintegration/imaging"
+
 	"github.com/seivanov1986/gocart/internal/repository/image"
 )
 
@@ -32,26 +34,12 @@ func (u *service) Create(ctx context.Context, in ImageCreateIn) error {
 }
 
 func (u *service) makeThumb(ctx context.Context, path, name string) error {
-	/*
-		img, err := imaging.Open(filePath, imaging.AutoOrientation(true))
-		if err != nil {
-			return fmt.Errorf("error open file: %v, error %w", filePath, err)
-		}
+	filePath := path + name
 
-		format, _ := imaging.FormatFromFilename(filePath)
-
-		centercroping := imaging.Resize(img, size.Width, size.Height, imaging.CatmullRom)
-		buf := new(bytes.Buffer)
-
-		if size.Watermark {
-			mark := watermark(serviceBasePath, centercroping, textWatermark)
-			imaging.Encode(buf, mark, format)
-		} else {
-			imaging.Encode(buf, centercroping, format)
-		}
-
-		err = u.objectStorage.File().Save("/images"+imagePath+fileName, buf)
-	*/
+	_, err := imaging.Open(filePath, imaging.AutoOrientation(true))
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
