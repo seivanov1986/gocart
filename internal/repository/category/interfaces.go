@@ -12,4 +12,5 @@ type Repository interface {
 	List(ctx context.Context, in CategoryListInput) (*CategoryListOut, error)
 
 	SelectList(ctx context.Context, in CategorySelectListInput) ([]CategorySelectListRow, error)
+	ListFull(ctx context.Context, in CategoryListFullInput) (*CategoryListFullOut, error)
 }

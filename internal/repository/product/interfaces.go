@@ -10,4 +10,6 @@ type Repository interface {
 	Update(ctx context.Context, in ProductUpdateInput) error
 	Delete(ctx context.Context, IDs []int64) error
 	List(ctx context.Context, in ProductListInput) (*ProductListOut, error)
+
+	ListFull(ctx context.Context, in ProductListFullInput) (*ProductListFullOut, error)
 }
