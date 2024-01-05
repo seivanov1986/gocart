@@ -44,6 +44,8 @@ import (
 	sefUrlService "github.com/seivanov1986/gocart/internal/service/sefurl"
 	userService "github.com/seivanov1986/gocart/internal/service/user"
 
+	exampleAjax "github.com/seivanov1986/gocart/internal/ajax/example"
+
 	"github.com/seivanov1986/gocart/client"
 	"github.com/seivanov1986/gocart/internal/http/attribute_to_product"
 	"github.com/seivanov1986/gocart/internal/widget/example"
@@ -433,6 +435,11 @@ func (g *goCart) InitAttributeHandles(router *mux.Router) {
 	router.HandleFunc("/list", attributeHandle.List).Methods(http.MethodPost, http.MethodOptions)
 
 	router.HandleFunc("/select_list", attributeHandle.SelectList).Methods(http.MethodPost, http.MethodOptions)
+}
+
+func (g *goCart) InitAjaxManager(manager client.AjaxManager) {
+	ajaxHandler := exampleAjax.New()
+	manager.RegisterPath("inexample", ajaxHandler)
 }
 
 func (g *goCart) InitYandexHandles(router *mux.Router) {
