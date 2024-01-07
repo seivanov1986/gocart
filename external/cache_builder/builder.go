@@ -157,9 +157,24 @@ func (b *builder) renderPage(ctx context.Context, row sefurl.SefUrlListLimitIdRo
 func (b *builder) renderCategory(ctx context.Context, row sefurl.SefUrlListLimitIdRow) ([]byte, error) {
 	serviceBasePath := observer.GetServiceBasePath(ctx)
 
-	templateFiles := []string{
-		serviceBasePath + "/schemes/templates/layouts/common.html",
+	layoutName := "category"
+	if row.Template != nil && *row.Template != "" {
+		layoutName = *row.Template
 	}
+
+	layoutFile := []string{
+		serviceBasePath + "/schemes/templates/layouts/common.html",
+		serviceBasePath + "/schemes/templates/layouts/" + layoutName + ".html",
+	}
+
+	templateCommonFiles, _ := filepath.Glob(
+		serviceBasePath + "/schemes/templates/blocks/category/*.html",
+	)
+	blockFiles, _ := filepath.Glob(
+		serviceBasePath + "/schemes/templates/blocks/" + layoutName + "/*.html",
+	)
+	templateFiles := append(layoutFile, templateCommonFiles...)
+	templateFiles = append(templateFiles, blockFiles...)
 
 	tmpl, err := template.New("common").ParseFiles(templateFiles...)
 	if err != nil {
@@ -197,9 +212,24 @@ func (b *builder) renderCategory(ctx context.Context, row sefurl.SefUrlListLimit
 func (b *builder) renderProduct(ctx context.Context, row sefurl.SefUrlListLimitIdRow) ([]byte, error) {
 	serviceBasePath := observer.GetServiceBasePath(ctx)
 
-	templateFiles := []string{
-		serviceBasePath + "/schemes/templates/layouts/common.html",
+	layoutName := "product"
+	if row.Template != nil && *row.Template != "" {
+		layoutName = *row.Template
 	}
+
+	layoutFile := []string{
+		serviceBasePath + "/schemes/templates/layouts/common.html",
+		serviceBasePath + "/schemes/templates/layouts/" + layoutName + ".html",
+	}
+
+	templateCommonFiles, _ := filepath.Glob(
+		serviceBasePath + "/schemes/templates/blocks/product/*.html",
+	)
+	blockFiles, _ := filepath.Glob(
+		serviceBasePath + "/schemes/templates/blocks/" + layoutName + "/*.html",
+	)
+	templateFiles := append(layoutFile, templateCommonFiles...)
+	templateFiles = append(templateFiles, blockFiles...)
 
 	tmpl, err := template.New("common").ParseFiles(templateFiles...)
 	if err != nil {
