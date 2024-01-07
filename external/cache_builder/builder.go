@@ -56,7 +56,7 @@ func (b *builder) Handler(ctx context.Context, pages []client.UrlListRow) error 
 		}
 
 		for _, row := range rows {
-			content, err := b.MakeObject(ctx, client.SefUrlItem{
+			content, err := b.makeObject(ctx, client.SefUrlItem{
 				ID:       row.ID,
 				Url:      row.Url,
 				Path:     row.Path,
@@ -82,7 +82,12 @@ func (b *builder) Handler(ctx context.Context, pages []client.UrlListRow) error 
 	return nil
 }
 
-func (b *builder) MakeObject(ctx context.Context, row client.SefUrlItem) ([]byte, error) {
+func (b *builder) RenderObject(ctx context.Context, url string) ([]byte, error) {
+	// TODO sefurl->readbyurl
+	return b.makeObject(ctx, client.SefUrlItem{})
+}
+
+func (b *builder) makeObject(ctx context.Context, row client.SefUrlItem) ([]byte, error) {
 	var content []byte
 	var err error
 
