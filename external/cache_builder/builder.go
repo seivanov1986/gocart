@@ -15,6 +15,8 @@ import (
 	"github.com/seivanov1986/gocart/external/observer"
 	"github.com/seivanov1986/gocart/helpers"
 	"github.com/seivanov1986/gocart/internal/repository"
+	"github.com/seivanov1986/gocart/internal/repository/page"
+	"github.com/seivanov1986/gocart/internal/repository/product"
 	"github.com/seivanov1986/gocart/internal/repository/sefurl"
 )
 
@@ -87,6 +89,24 @@ func (b *builder) makeObject(ctx context.Context, row sefurl.SefUrlListLimitIdRo
 	return helpers.SaveFile("/tmp/cache/"+fileName, bytes.NewReader(content))
 }
 
+func (b *builder) getPageData(ctx context.Context, idObject int64) map[string]interface{} {
+	result := map[string]interface{}{}
+
+	pageRow, err := b.hub.Page().Read(ctx, page.PageReadInput{ID: idObject})
+	if err != nil {
+		return result
+	}
+
+	result["Name"] = pageRow.Name
+	content := ""
+	if pageRow.Content != nil {
+		content = *pageRow.Content
+	}
+	result["Content"] = htmlTemplate.HTML(content)
+
+	return result
+}
+
 func (b *builder) renderPage(ctx context.Context, row sefurl.SefUrlListLimitIdRow) ([]byte, error) {
 	serviceBasePath := observer.GetServiceBasePath(ctx)
 
@@ -119,13 +139,7 @@ func (b *builder) renderPage(ctx context.Context, row sefurl.SefUrlListLimitIdRo
 	assetManager := asset_manager.New()
 	b.widgetManager.SetAssets(assetManager)
 
-	// TODO get ITEM
-
-	err = tmpl.ExecuteTemplate(buf, "common", map[string]interface{}{
-		"name":    "",
-		"content": htmlTemplate.HTML(""),
-		"meta":    "",
-	})
+	err = tmpl.ExecuteTemplate(buf, "common", b.getPageData(ctx, row.IdObject))
 	if err != nil {
 		return nil, err
 	}
@@ -152,6 +166,24 @@ func (b *builder) renderPage(ctx context.Context, row sefurl.SefUrlListLimitIdRo
 	content = strings.Replace(content, "{#systemtemplate%toppreload#}", assetManager.GetPreloadTemplate(), -1)
 
 	return []byte(content), nil
+}
+
+func (b *builder) getCategoryData(ctx context.Context, idObject int64) map[string]interface{} {
+	result := map[string]interface{}{}
+
+	categoryRow, err := b.hub.Category().Read(ctx, idObject)
+	if err != nil {
+		return result
+	}
+
+	result["Name"] = categoryRow.Name
+	content := ""
+	if categoryRow.Content != nil {
+		content = *categoryRow.Content
+	}
+	result["Content"] = htmlTemplate.HTML(content)
+
+	return result
 }
 
 func (b *builder) renderCategory(ctx context.Context, row sefurl.SefUrlListLimitIdRow) ([]byte, error) {
@@ -186,7 +218,7 @@ func (b *builder) renderCategory(ctx context.Context, row sefurl.SefUrlListLimit
 	assetManager := asset_manager.New()
 	b.widgetManager.SetAssets(assetManager)
 
-	err = tmpl.ExecuteTemplate(buf, "common", nil)
+	err = tmpl.ExecuteTemplate(buf, "common", b.getCategoryData(ctx, row.IdObject))
 	if err != nil {
 		return nil, err
 	}
@@ -207,6 +239,24 @@ func (b *builder) renderCategory(ctx context.Context, row sefurl.SefUrlListLimit
 	}
 
 	return []byte(content), nil
+}
+
+func (b *builder) getProductData(ctx context.Context, idObject int64) map[string]interface{} {
+	result := map[string]interface{}{}
+
+	productRow, err := b.hub.Product().Read(ctx, product.ProductReadInput{ID: idObject})
+	if err != nil {
+		return result
+	}
+
+	result["Name"] = productRow.Name
+	content := ""
+	if productRow.Content != nil {
+		content = *productRow.Content
+	}
+	result["Content"] = htmlTemplate.HTML(content)
+
+	return result
 }
 
 func (b *builder) renderProduct(ctx context.Context, row sefurl.SefUrlListLimitIdRow) ([]byte, error) {
@@ -241,7 +291,7 @@ func (b *builder) renderProduct(ctx context.Context, row sefurl.SefUrlListLimitI
 	assetManager := asset_manager.New()
 	b.widgetManager.SetAssets(assetManager)
 
-	err = tmpl.ExecuteTemplate(buf, "common", nil)
+	err = tmpl.ExecuteTemplate(buf, "common", b.getProductData(ctx, row.IdObject))
 	if err != nil {
 		return nil, err
 	}
