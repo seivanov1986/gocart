@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/seivanov1986/gocart/client"
 	"github.com/seivanov1986/gocart/external/asset_manager"
@@ -97,6 +98,8 @@ func (b *builder) getPageData(ctx context.Context, idObject int64) map[string]in
 		return result
 	}
 
+	result["Year"] = time.Now().Year()
+
 	result["Name"] = pageRow.Name
 	content := ""
 	if pageRow.Content != nil {
@@ -113,6 +116,15 @@ func (b *builder) renderPage(ctx context.Context, row sefurl.SefUrlListLimitIdRo
 	layoutName := "page"
 	if row.Template != nil && *row.Template != "" {
 		layoutName = *row.Template
+	} else {
+		switch row.Type {
+		case 0:
+			layoutName = "page"
+		case 1:
+			layoutName = "post"
+		case 2:
+			layoutName = "nova"
+		}
 	}
 
 	layoutFile := []string{
@@ -175,6 +187,8 @@ func (b *builder) getCategoryData(ctx context.Context, idObject int64) map[strin
 	if err != nil {
 		return result
 	}
+
+	result["Year"] = time.Now().Year()
 
 	result["Name"] = categoryRow.Name
 	content := ""
@@ -248,6 +262,8 @@ func (b *builder) getProductData(ctx context.Context, idObject int64) map[string
 	if err != nil {
 		return result
 	}
+
+	result["Year"] = time.Now().Year()
 
 	result["Name"] = productRow.Name
 	content := ""
